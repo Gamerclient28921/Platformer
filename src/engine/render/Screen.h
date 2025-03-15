@@ -1,8 +1,9 @@
 ﻿#pragma once
 
-enum class ScreenType : uint8_t
+enum class ScreenType : int
 {
-    GameScreen = 0
+    GameScreen = 0,
+    MenuScreen,
 };
 
 class Screen

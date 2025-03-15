@@ -13,5 +13,5 @@ public:
         this->type = ScreenType::GameScreen;
     }
     
-    const void render(const Player&, const int&);
+    const void render(const Player&, const int& ticks);
 };
