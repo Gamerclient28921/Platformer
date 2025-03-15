@@ -9,6 +9,7 @@
 #include "engine/render/Screen.h"
 
 
+
 class Game
 {
 private:
@@ -24,11 +25,14 @@ public:
         roboto = LoadFont("../res/Font/Roboto.ttf");
 
         
-        currentScreen = new GameScreen(roboto);
+        currentScreen = new MenuScreen(roboto);
         currentLevel  = new Level();
     }
 
 
     void render();
     void update();
+    Font getFont() { return roboto; }
 };
+
+static Game* game = new Game();

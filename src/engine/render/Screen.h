@@ -10,9 +10,12 @@ class Screen
 {
 private:
     Font font;
+    Screen* previouseScreen;
 public:
     ScreenType type;
     bool renderDebugMenu;
+    float windowWidth =  1280.f;
+    float windowHeight = 720.f;
     
     void render();
 

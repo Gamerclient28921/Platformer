@@ -18,11 +18,10 @@ int main ()
 {
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 	
-	InitWindow(WindowWidth, WindowHeight, "Game");
+	InitWindow(WindowWidth, WindowHeight, "Platformer");
 	
 	SearchAndSetResourceDir("resources");
-
-	Game* game = new Game();
+	
 	
 	SetTargetFPS(160);  
 	// game loop
