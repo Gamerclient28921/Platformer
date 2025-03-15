@@ -1,70 +1,101 @@
 ﻿#include "Player.h"
 
+#include <iostream>
+
+#include "game/object/impl/Platform.h"
 
 
-Player::Player(int x, int y, ResourceLocation* sprite)
+Player::Player(float x, float y)
 {
     this->position.x = x;
     this->position.y = y;
-    this->sprite = sprite;
+    this->size.x = static_cast<float>(this->sprite->width);
+    this->size.y = static_cast<float>(this->sprite->height);
     speed = 1;
 }
 
 #define WindowWidth (int) 1280
 #define WindowHeight (int) 720
 
-void Player::update(int& ticks)
+void Player::update(const int& ticks, const std::vector<Platform*>& platforms)
 {
-    this->velocity = Vec2_f();
-    if (this->position.y + this->sprite->height <= 0)
+    if (ticks % 40)
     {
-        isFalling = false;
-        this->fallTime = 0.0f;
+        this->velocity = Vec2_f();
     }
-    
-    if (isFalling)
+    if (this->isFalling && this->jumpTimer <= 0)
     {
-        if (fallTime <= 3)
-            fallTime += 0.2f;
+        if (this->fallTime < 3.f)
+            this->fallTime += 0.1f;
         
 
-        this->velocity.y += fallSpeed * fallTime;
+        this->velocity.y += this->fallSpeed * this->fallTime;
     }
     
     if (IsKeyDown(KEY_UP))
-        this->velocity.y = -5.f;
-    if  (IsKeyDown(KEY_DOWN))
-        this->velocity.y = 1.2f;
+    {
+        if (this->canJump)
+        {
+            this->fallTime = 0.2f;
+            this->velocity.y = -75.f;
+            this->jumpTimer = 40;
+        }
+    }
+    
     if (IsKeyDown(KEY_LEFT))
         this->velocity.x = -1.2f;
     if (IsKeyDown(KEY_RIGHT))
         this->velocity.x = 1.2f;
+    
 
 
-    this->updatePosition();
+    if (this->jumpTimer > 0)
+        this->jumpTimer--;
+    
+    this->updatePosition(platforms);
     this->clipInbounds();
-    
-    
 }
 
 
-
-bool Player::checkCollisionHorizontal(const Vector2& toCheck)
+void Player::updatePosition(const std::vector<Platform*>& platforms)
 {
-    if ((this->position.x >= toCheck.x && this->position.x <= toCheck.x) ||
-        (this->position.x + this->sprite->width >= toCheck.x && this->position.x + this->sprite->width <= toCheck.x))
-        return true;
+    float newX = this->position.x + (this->velocity.x * this->speed);
+    float newY = this->position.y + (this->velocity.y * this->speed);
+
+    bool collidedX = false;
+    bool collidedY = false;
+    for (auto p : platforms) {
+        std::cout << "Platform: " << p->position.x << ", " << p->position.y << std::endl;
+        
+
+        if (newX < p->position.x - p->size.x &&
+            newX + this->size.x > p->position.x)
+        {
+            collidedX = true;
+        }
+       
+        if (newY < p->position.y + p->size.y &&
+            newY + this->size.y > p->position.y)
+        {
+            collidedY = true;
+            this->canJump = true;
+        }else
+        {
+            this->canJump = false;
+        }
+            
+
+        std::cout << "Collided: " << collidedX << ", " << collidedY << std::endl;
+    }
     
-    return false;
+    if (!collidedX)
+        this->position.x += this->velocity.x * this->speed;
+    if (!collidedY)
+        this->position.y += this->velocity.y * this->speed;
 }
 
-void Player::updatePosition()
-{
-    this->position.x += this->velocity.x * this->speed;
-    this->position.y += this->velocity.y * this->speed;
-}
 
-void Player::render()
+void Player::render(const int& ticks)
 {
     this->updateRenderPosition();
     DrawTexture(this->sprite->getResource(), this->renderPosition.x, this->renderPosition.y, WHITE);
@@ -77,12 +108,40 @@ void Player::updateRenderPosition()
 }
 
 
+MoveDirection Player::getMoveDirection()
+{
+    MoveDirection direction = MoveDirection::None;
+    if (velocity.x > 0.f)  {
+        direction = MoveDirection::Right;
+    }
+    else if (velocity.x < 0.f) {
+        direction = MoveDirection::Left;
+    }
+
+    if (velocity.y > 0.f)  {
+        if (direction == MoveDirection::Right)
+            return MoveDirection::DownRight;
+        
+        if (direction == MoveDirection::Left)
+            return MoveDirection::DownLeft;
+    }
+    else if (velocity.y < 0.f)  {
+        if (direction == MoveDirection::Right)
+            return MoveDirection::UpRight;
+        if (direction == MoveDirection::Left)
+            return MoveDirection::UpLeft;
+    }
+
+    
+    return MoveDirection::None;
+}
+
 void Player::clipInbounds()
 {
     if (((int)this->position.x + this->sprite->width) > WindowWidth)
-        this->position.x = WindowWidth - this->sprite->width;
+        this->position.x = (float) (WindowWidth - this->sprite->width);
     if (((int)this->position.y + this->sprite->height) > WindowHeight)
-        this->position.y = WindowHeight - this->sprite->height;
-    this->position.y = std::max<int>(this->position.y, 0);
-    this->position.x = std::max<int>(this->position.x, 0);
+        this->position.y = (float) (WindowHeight - this->sprite->height);
+    this->position.y = std::max<float>(this->position.y, 0);
+    this->position.x = std::max<float>(this->position.x, 0);
 }

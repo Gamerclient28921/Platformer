@@ -12,6 +12,7 @@
 #define WindowHeight (float) 720
 
 #include "game/entity/impl/Player.h"
+#include "game/level/Level.h"
 #include "game/screen/GameScreen.h"
 
 
@@ -25,10 +26,10 @@ int main ()
 	SearchAndSetResourceDir("resources");
 	
 	Font roboto = LoadFont("../res/Font/Roboto.ttf");
-	ResourceLocation* playerSprite = new ResourceLocation("../res/PlayerSprite.png");
-	Player* player = new Player(0, 0, playerSprite);
+	
 	
 	Screen* currentScreen = new GameScreen(roboto);
+	Level*  currentLevel  = new Level();
 	
 	SetTargetFPS(160);  
 	// game loop
@@ -51,15 +52,15 @@ int main ()
 
 			
 			
-			game_screen->render(*player, ticks);
+			game_screen->render(*currentLevel->player, ticks);
 
 			ClearBackground(BLUE);
-			player->render();
+			currentLevel->render(ticks);
 			
-			DrawRectangle(200, 200, 200, 20, GREEN);
+			//DrawRectangle(200, 200, 200, 20, GREEN);
 		}
 		
-		player->update(ticks);
+		currentLevel->update(ticks);
 		
 		
 		EndDrawing();
