@@ -15,11 +15,7 @@ Player::Player(int x, int y, ResourceLocation* sprite)
 
 void Player::update(int& ticks)
 {
-    if (ticks % 20)
-    {
-        this->velocity.x = 0;
-        this->velocity.y = 0;
-    }
+    this->velocity = Vec2_f();
     if (this->position.y + this->sprite->height <= 0)
     {
         isFalling = false;
@@ -45,16 +41,15 @@ void Player::update(int& ticks)
         this->velocity.x = 1.2f;
 
 
-    updatePosition();
+    this->updatePosition();
     this->clipInbounds();
-    ticks++;
     
     
 }
 
 
 
-const bool Player::checkCollisionHorizontal(const Vector2& toCheck)
+bool Player::checkCollisionHorizontal(const Vector2& toCheck)
 {
     if ((this->position.x >= toCheck.x && this->position.x <= toCheck.x) ||
         (this->position.x + this->sprite->width >= toCheck.x && this->position.x + this->sprite->width <= toCheck.x))
@@ -63,17 +58,26 @@ const bool Player::checkCollisionHorizontal(const Vector2& toCheck)
     return false;
 }
 
-const void Player::updatePosition()
+void Player::updatePosition()
 {
-    this->position += this->velocity * this->speed;
+    this->position.x += this->velocity.x * this->speed;
+    this->position.y += this->velocity.y * this->speed;
 }
 
 void Player::render()
 {
-    DrawTexture(this->sprite->getResource(), this->position.x, this->position.y, WHITE);
+    this->updateRenderPosition();
+    DrawTexture(this->sprite->getResource(), this->renderPosition.x, this->renderPosition.y, WHITE);
 }
 
-const void Player::clipInbounds()
+void Player::updateRenderPosition()
+{
+    this->renderPosition.x = (int)this->position.x;
+    this->renderPosition.y = (int)this->position.y;
+}
+
+
+void Player::clipInbounds()
 {
     if (((int)this->position.x + this->sprite->width) > WindowWidth)
         this->position.x = WindowWidth - this->sprite->width;

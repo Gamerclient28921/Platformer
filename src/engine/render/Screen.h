@@ -28,8 +28,8 @@ public:
     void DrawText(const char* text, int x, int y, float size, Color color)
     {
         Vector2 position;
-        position.x = (float)x;
-        position.y = (float)y;
+        position.x = static_cast<float>(x);
+        position.y = static_cast<float>(y);
         
         DrawTextEx(this->font, text, position, size, 1, color);
     }

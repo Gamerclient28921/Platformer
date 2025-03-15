@@ -4,13 +4,15 @@
 #include "raylib.h"
 
 #include "resource_dir.h"
+
+#include "engine/assets/ResourceLocation.h"
 #include "engine/render/Screen.h"
 
 #define WindowWidth (float) 1280
 #define WindowHeight (float) 720
 
-#include "game/Player.h"
-#include "game/screens/GameScreen.h"
+#include "game/entity/impl/Player.h"
+#include "game/screen/GameScreen.h"
 
 
 
@@ -37,7 +39,7 @@ int main ()
 		if (IsKeyDown(KEY_F3))
 			currentScreen->renderDebugMenu = !currentScreen->renderDebugMenu;
 		
-		player->update(ticks);
+		
 		
 		
 		// drawing
@@ -57,7 +59,7 @@ int main ()
 			DrawRectangle(200, 200, 200, 20, GREEN);
 		}
 		
-		
+		player->update(ticks);
 		
 		
 		EndDrawing();

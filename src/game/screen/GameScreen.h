@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <raylib.h>
 
-#include "game/Player.h"
+#include "game/entity/impl/Player.h"
 #include "./engine/render/Screen.h"
 
 
