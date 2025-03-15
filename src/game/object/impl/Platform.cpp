@@ -2,6 +2,10 @@
 
 #include "raylib.h"
 
+void Platform::update(const int& ticks)
+{
+    
+}
 
 void Platform::render(const int& ticks)
 {

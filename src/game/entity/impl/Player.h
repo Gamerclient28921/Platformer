@@ -7,20 +7,6 @@
 #include "engine/math/Vec2_f.h"
 #include "engine/math/Vec2_i.h"
 #include "game/object/impl/Platform.h"
-
-enum class MoveDirection : uint8_t
-{
-    None = 0,
-    Up,
-    Down,
-    Left,
-    Right,
-    UpLeft,
-    UpRight,
-    DownLeft,
-    DownRight,
-};
-
 class Player
 {
 private:
@@ -38,7 +24,6 @@ private:
     
     void clipInbounds();
     void updateRenderPosition();
-    MoveDirection getMoveDirection();
 public:
     Vec2_f position;
     Vec2_f size;

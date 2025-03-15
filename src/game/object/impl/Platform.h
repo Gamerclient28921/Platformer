@@ -19,4 +19,5 @@ public:
     }
     
     void render(const int& ticks);
+    void update(const int& ticks);
 };

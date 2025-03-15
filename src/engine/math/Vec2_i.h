@@ -64,4 +64,13 @@ public:
     {
         return {this->x / other.x, this->y / other.y};
     }
+
+    Vec2_i operator!=(const Vec2_i& other)
+    {
+        return {this->x != other.x, this->y != other.y};
+    }
+    Vec2_i operator==(const Vec2_i& other)
+    {
+        return {this->x == other.x, this->y == other.y};
+    }
 };

@@ -64,10 +64,12 @@ public:
     {
         return Vec2_f(this->x / other.x, this->y / other.y);
     }
-
+    
 
     Vec2_f expand(const Vec2_f& other)
     {
         return Vec2_f(this->x + other.x, this->y + other.y);
-    } 
+    }
+
+    
 };

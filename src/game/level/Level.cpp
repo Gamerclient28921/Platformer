@@ -16,6 +16,10 @@ void Level::update(const int& ticks)
     
     player->update(ticks, platforms);
     
+    for (size_t i = 0; i < platforms.size(); i++)
+    {
+        platforms[i]->update(ticks);
+    }
 }
 
 

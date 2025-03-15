@@ -19,10 +19,8 @@ Player::Player(float x, float y)
 
 void Player::update(const int& ticks, const std::vector<Platform*>& platforms)
 {
-    if (ticks % 40)
-    {
-        this->velocity = Vec2_f();
-    }
+    this->velocity = Vec2_f();
+    
     if (this->isFalling && this->jumpTimer <= 0)
     {
         if (this->fallTime < 3.f)
@@ -65,9 +63,6 @@ void Player::updatePosition(const std::vector<Platform*>& platforms)
     bool collidedX = false;
     bool collidedY = false;
     for (auto p : platforms) {
-        std::cout << "Platform: " << p->position.x << ", " << p->position.y << std::endl;
-        
-
         if (newX < p->position.x - p->size.x &&
             newX + this->size.x > p->position.x)
         {
@@ -85,14 +80,16 @@ void Player::updatePosition(const std::vector<Platform*>& platforms)
         }
             
 
-        std::cout << "Collided: " << collidedX << ", " << collidedY << std::endl;
+        //std::cout << "Collided: " << collidedX << ", " << collidedY << std::endl;
     }
-    
+
+    //lerp(collidedX, collidedY);
     if (!collidedX)
         this->position.x += this->velocity.x * this->speed;
     if (!collidedY)
         this->position.y += this->velocity.y * this->speed;
 }
+
 
 
 void Player::render(const int& ticks)
@@ -105,35 +102,6 @@ void Player::updateRenderPosition()
 {
     this->renderPosition.x = (int)this->position.x;
     this->renderPosition.y = (int)this->position.y;
-}
-
-
-MoveDirection Player::getMoveDirection()
-{
-    MoveDirection direction = MoveDirection::None;
-    if (velocity.x > 0.f)  {
-        direction = MoveDirection::Right;
-    }
-    else if (velocity.x < 0.f) {
-        direction = MoveDirection::Left;
-    }
-
-    if (velocity.y > 0.f)  {
-        if (direction == MoveDirection::Right)
-            return MoveDirection::DownRight;
-        
-        if (direction == MoveDirection::Left)
-            return MoveDirection::DownLeft;
-    }
-    else if (velocity.y < 0.f)  {
-        if (direction == MoveDirection::Right)
-            return MoveDirection::UpRight;
-        if (direction == MoveDirection::Left)
-            return MoveDirection::UpLeft;
-    }
-
-    
-    return MoveDirection::None;
 }
 
 void Player::clipInbounds()
